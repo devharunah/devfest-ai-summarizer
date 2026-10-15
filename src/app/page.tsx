@@ -12,6 +12,12 @@ function source(path: string): string {
 }
 
 const STACK = ["Next.js 16", "AI SDK", "OpenAI", "Zod", "TypeScript"];
+const CHIP_COLORS = [
+  "var(--pastel-blue)",
+  "var(--pastel-red)",
+  "var(--pastel-yellow)",
+  "var(--pastel-green)",
+];
 
 export default function Home() {
   const snippets: Snippets = {
@@ -24,28 +30,34 @@ export default function Home() {
   return (
     <main className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:py-14">
       <header className="mb-10 max-w-3xl">
-        <p className="flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.18em] text-[var(--muted)]">
-          <span className="flex gap-1" aria-hidden>
-            <span className="size-2 rounded-full bg-[#4285F4]" />
-            <span className="size-2 rounded-full bg-[#EA4335]" />
-            <span className="size-2 rounded-full bg-[#FBBC04]" />
-            <span className="size-2 rounded-full bg-[#34A853]" />
+        <p className="flex items-center gap-3 text-base text-[var(--ink)]">
+          <span className="flex gap-1.5" aria-hidden>
+            <span className="h-3 w-5 -rotate-45 rounded-full bg-[var(--google-red)]" />
+            <span className="h-3 w-5 rotate-45 rounded-full bg-[var(--google-blue)]" />
+            <span className="h-3 w-5 rotate-45 rounded-full bg-[var(--google-green)]" />
+            <span className="h-3 w-5 -rotate-45 rounded-full bg-[var(--google-yellow)]" />
           </span>
-          DevFest Mbarara
+          <span>
+            Google Developer Groups <span className="text-[var(--muted)]">· DevFest Mbarara</span>
+          </span>
         </p>
-        <h1 className="mt-4 text-4xl font-semibold tracking-tight sm:text-5xl">
-          You don&apos;t need the Python backend.
+        <h1 className="mt-6 text-4xl font-bold tracking-tight sm:text-6xl">
+          You don&apos;t need the <span className="text-[var(--google-blue)]">Python</span> backend.
         </h1>
-        <p className="mt-4 text-lg leading-8 text-[var(--muted)]">
+        <p className="subhead mt-4 text-lg text-[var(--muted)] sm:text-xl">
+          Shipping AI apps with Next.js and the AI SDK
+        </p>
+        <p className="mt-5 text-lg leading-8 text-[var(--muted)]">
           Paste a long document, then walk through four AI SDK building blocks: a one-shot answer, a
           streamed summary, typed structured output, and a chat grounded in your document. All of it
           runs in one Next.js app.
         </p>
         <ul className="mt-5 flex flex-wrap gap-2">
-          {STACK.map((item) => (
+          {STACK.map((item, i) => (
             <li
               key={item}
-              className="rounded-full border border-[var(--line)] px-3 py-1 text-xs font-medium"
+              className="subhead rounded-full px-3 py-1 text-xs text-[var(--ink)]"
+              style={{ backgroundColor: CHIP_COLORS[i % CHIP_COLORS.length] }}
             >
               {item}
             </li>

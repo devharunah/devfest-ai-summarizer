@@ -2,19 +2,16 @@
 
 # CLAUDE.md
 
-> Replace the bracketed parts with your project's own. Everything else is the template's
-> standing contract and is meant to survive.
-
 ## Project context
 
-**[Project name]** is [one sentence on what it is and who it serves].
+**devfest-ai-summarizer** is the demo app for the DevFest Mbarara talk *You Don't Need the Python Backend*: paste a long document, then summarize, stream, extract structured insights and chat about it, all from one Next.js app with the Vercel AI SDK.
 
 **Stack**
 
 - Framework: Next.js 16, App Router
 - Language: TypeScript, strict
 - UI: React 19, Tailwind CSS v4 through PostCSS
-- Data: Supabase, via `@supabase/ssr`
+- AI: Vercel AI SDK (`ai`, `@ai-sdk/react`) with `@ai-sdk/openai`, schemas in Zod
 - Package manager: pnpm, pinned in `packageManager`
 
 **Layout**
@@ -22,9 +19,13 @@
 | Path | What lives there |
 |---|---|
 | `src/app/` | Routes, layouts and pages |
-| `src/lib/` | Pure modules and the Supabase clients |
-| `src/lib/supabase/server.ts` | Server client. Reads cookies through `next/headers` |
-| `src/lib/supabase/browser.ts` | Browser client |
+| `src/lib/` | Pure modules |
+| `src/lib/ai/model.ts` | `getModel()`. The only place a provider or API key is touched. Server only |
+| `src/lib/ai/prompts.ts` | Prompt builders and `checkDocument`, the input guard every route runs first |
+| `src/lib/ai/schemas.ts` | Zod schema shared by `/api/extract` and `useObject` |
+| `src/app/actions.ts` | Server Action: `generateText` |
+| `src/app/api/*/route.ts` | Route handlers: `streamText`, structured output, chat |
+| `src/components/` | Client components, one per demo step |
 | `src/lib/env.ts` | `requireEnv`. Every environment variable goes through it |
 | `next.config.ts` | Next config. Typed, and where `typedRoutes` and `typedEnv` are switched on |
 | `eslint.config.ts` | ESLint flat config. TypeScript, loaded through `jiti` |
@@ -40,7 +41,7 @@ fails at the point of use with a message naming the variable and pointing at `.e
 Add every new variable to `.env.example` in the same commit as the code that reads it. A variable
 that only exists in someone's `.env.local` does not exist.
 
-The service role key is server only. If a file that imports it is reachable from a client
+`OPENAI_API_KEY` is server only. If a file that imports it is reachable from a client
 component, that key ships to the browser.
 
 ## TypeScript
@@ -74,7 +75,7 @@ commit it back.
 
 This is the line that decides where a test goes:
 
-- **Jest** covers pure modules. No DOM that matters, no network, no Supabase.
+- **Jest** covers pure modules. No DOM that matters, no network, no model calls.
 - **Playwright** covers anything that renders, fetches or runs on the server. It boots the real
   app, so it is the only place that can prove a Server Action actually runs. A `"use server"`
   module typechecks cleanly and still fails the first time a person presses submit.

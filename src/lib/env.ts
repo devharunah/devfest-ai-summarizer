@@ -7,3 +7,7 @@ export function requireEnv(name: string): string {
 
   return value;
 }
+
+export function optionalEnv(name: string, fallback: string): string {
+  return process.env[name] || fallback;
+}

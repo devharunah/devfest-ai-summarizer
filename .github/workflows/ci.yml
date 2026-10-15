@@ -40,13 +40,8 @@ jobs:
   e2e:
     runs-on: ubuntu-latest
     needs: [lint, typecheck, test]
-    env:
-      # Optional. The starter page does not read Supabase, so e2e stays green
-      # until a project wires these up in Settings -> Secrets and variables.
-      NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || 'http://127.0.0.1:54321' }}
-      NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
-      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+    # No OPENAI_API_KEY here on purpose: e2e never calls the model, so forks and
+    # PRs from contributors stay green without access to a paid key.
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup

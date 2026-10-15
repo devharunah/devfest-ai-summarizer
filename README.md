@@ -1,69 +1,75 @@
-# claude-nextjs-supabase-template
+# devfest-ai-summarizer
 
-A Next.js 16 and Supabase starter that arrives with a working Claude Code setup: nine subagents,
-fifteen slash commands, ten skills, standing rules, and session hooks that survive compaction.
+**You Don't Need the Python Backend: shipping AI apps with Next.js and the AI SDK.**
+The demo app for my DevFest Mbarara talk.
 
-Use it as a GitHub template, or `gh repo create <name> --template devharunah/claude-nextjs-supabase-template`.
+Paste a long document (or load the sample meeting transcript), then go through four steps. Each
+step shows one AI SDK building block, and each panel has a **Show the code** toggle that displays
+the exact server code behind it.
 
-## What you get
+| Step | What you see | AI SDK concept | File |
+|---|---|---|---|
+| 1. Quick TL;DR | A two-sentence answer with latency and token counts | `generateText` in a Server Action | [`src/app/actions.ts`](src/app/actions.ts) |
+| 2. Streaming summary | A Markdown summary that appears as the model writes it, plus the compression ratio | `streamText` + `useCompletion` | [`src/app/api/summarize/route.ts`](src/app/api/summarize/route.ts) |
+| 3. Structured insights | Title, key points, decisions, action items with owners, sentiment. Cards fill in while the response streams | `Output.object` + a Zod schema + `useObject` | [`src/app/api/extract/route.ts`](src/app/api/extract/route.ts), [`src/lib/ai/schemas.ts`](src/lib/ai/schemas.ts) |
+| 4. Follow-up questions | A chat that answers only from your document | `useChat` + `streamText`, with the document passed as `instructions` | [`src/app/api/chat/route.ts`](src/app/api/chat/route.ts) |
 
-**The app**
+The server side is four small files plus a model helper. There's no FastAPI service, no second
+deployment and no second language, and the API key never leaves the server.
 
-- Next.js 16, App Router, React 19, TypeScript strict, plus the strictness flags `strict`
-  itself leaves off, and typed routes and typed env vars from `next.config.ts`
-- Tailwind CSS v4 through PostCSS
-- Supabase through `@supabase/ssr`, a server client and a browser client, both behind `requireEnv`
-- Biome for formatting and lint, ESLint for the Next rules
-- Jest for pure modules, Playwright for anything that renders or fetches
+## Run it
 
-**The CI**
-
-Four jobs in `.github/workflows/ci.yml`, sharing one composite setup action: lint, typecheck plus
-production build, unit tests, and E2E gated behind the other three. The Playwright report uploads
-as an artifact on failure.
-
-**The harness**
-
-`.claude/`, vendored from [everything-claude-code](https://github.com/devharunah/everything-claude-code)
-and adapted so it actually runs on this stack and on Windows. Read `.claude/README.md` for what
-changed and why.
-
-## Getting started
+You need Node 20+, pnpm and an OpenAI API key.
 
 ```bash
 pnpm install
-cp .env.example .env.local
-```
-
-Fill in `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, then:
-
-```bash
+cp .env.example .env.local   # then set OPENAI_API_KEY
 pnpm dev
 ```
 
-## Then do these four things
+Open http://localhost:3000, click **Load sample transcript**, and go through steps 1 to 4.
 
-1. Fill in the bracketed parts of `CLAUDE.md`. The file is the contract every Claude session reads
-   first, and a template that still says `[Project name]` teaches it nothing.
-2. Rename the project in `package.json`.
-3. Add your Supabase secrets under Settings, Secrets and variables, Actions. The E2E job falls
-   back to a local URL so it stays green until you do.
-4. Decide your deploy target. `ci.yml` has a comment marking where the deploy steps attach.
+| Variable | Required | Default |
+|---|---|---|
+| `OPENAI_API_KEY` | yes | none |
+| `OPENAI_MODEL` | no | `gpt-5.4-mini` |
 
-## Commands
+To use a different provider, change one file: [`src/lib/ai/model.ts`](src/lib/ai/model.ts). The
+routes only call `getModel()`.
 
-| Command | What it does |
-|---|---|
-| `pnpm dev` | Dev server on port 3000 |
-| `pnpm verify` | lint, typecheck, Jest, Playwright. Run it before every push |
-| `pnpm check` | Biome |
-| `pnpm lint:fix` | ESLint and Biome, writing fixes |
-| `pnpm test` | Jest |
-| `pnpm e2e` | Playwright |
-| `pnpm typecheck` | Regenerates route and env types, then runs `tsc --noEmit` |
+## Deploy
 
-## Credit
+Import the repo on Vercel, add `OPENAI_API_KEY`, and deploy. Each route sets `maxDuration = 30`,
+and responses stream, so long documents don't hit a blank timeout.
 
-The Claude Code configuration is MIT licensed work by Affaan Mustafa, from
-[everything-claude-code](https://github.com/affaan-m/everything-claude-code). The Next.js and
-Supabase base follows `Aaron-Douglas/nextjs-supabase-starter`.
+## Talking points
+
+- **generateText vs streamText.** Both use the same model. Step 1 makes you wait for the whole answer; step 2 shows
+  the first words in well under a second. Compare the `latency` and `first token` chips.
+- **Structured output.** The Zod schema is shared by the server, where it constrains and validates
+  the model's output, and the client, where it types the partial object for rendering. Use **Show raw JSON** to show the actual payload.
+- **Model context.** The model keeps no memory between calls. `useChat` sends the whole history on
+  every turn, and the route adds the document as `instructions`. Ask a question the document can't
+  answer, such as the suggested pricing question, and the chat says so instead of making
+  something up.
+- **When you do still want Python:** offline data science, training, heavy notebooks. That work stays
+  outside the request path, so the user-facing app doesn't need it.
+
+## Project setup
+
+Built from [`claude-nextjs-supabase-template`](https://github.com/devharunah/claude-nextjs-supabase-template),
+with Supabase removed. It includes:
+
+- **Claude Code harness** in `.claude/`: subagents, slash commands, skills, rules and hooks. See
+  [`CLAUDE.md`](CLAUDE.md) and [`.claude/README.md`](.claude/README.md).
+- **Strict TypeScript**, Biome and ESLint, Jest for pure modules, Playwright for the running app.
+- **CI** on every PR: lint, typecheck plus production build, unit tests, then e2e. E2E never calls
+  the model, so CI needs no API key.
+
+```bash
+pnpm verify   # lint + typecheck + jest + playwright
+```
+
+## License
+
+MIT

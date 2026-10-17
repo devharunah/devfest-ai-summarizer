@@ -23,6 +23,7 @@
 | `src/lib/ai/model.ts` | `getModel()`. The only place a provider or API key is touched. Server only |
 | `src/lib/ai/prompts.ts` | Prompt builders and `checkDocument`, the input guard every route runs first |
 | `src/lib/ai/schemas.ts` | Zod schema shared by `/api/extract` and `useObject` |
+| `src/lib/code-samples.ts` | Trimmed snippets for the "Show sample code" toggles. Keep them in step with the real files when an SDK call changes |
 | `src/app/actions.ts` | Server Action: `generateText` |
 | `src/app/api/*/route.ts` | Route handlers: `streamText`, structured output, chat |
 | `src/components/` | Client components, one per demo step |

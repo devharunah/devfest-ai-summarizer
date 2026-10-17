@@ -32,12 +32,17 @@ test("loading the sample enables the actions", async ({ page }) => {
   await expect(page.getByRole("button", { name: "Extract insights" })).toBeEnabled();
 });
 
-test("show the code reveals the real route source", async ({ page }) => {
+test("show sample code reveals a highlighted snippet", async ({ page }) => {
   await page.goto("/");
 
-  await page.getByText("Show the code").nth(1).click();
+  const streamStep = page.getByRole("region", { name: "Streaming summary" });
+  await streamStep.getByText("Show sample code").click();
 
-  await expect(page.getByText("streamText({").first()).toBeVisible();
+  // Shiki splits code into colored spans, so match on the block's text, not a single node.
+  const sample = streamStep.locator(".code-sample pre");
+  await expect(sample).toBeVisible();
+  await expect(sample).toContainText("streamText({");
+  await expect(streamStep.getByText("src/app/api/summarize/route.ts")).toBeVisible();
 });
 
 for (const [path, body] of [

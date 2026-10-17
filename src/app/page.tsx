@@ -1,14 +1,13 @@
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
+import { codeToHtml } from "shiki";
 
 import { type Snippets, Summarizer } from "@/components/summarizer";
+import { CHAT_SAMPLE, INSIGHTS_SAMPLE, STREAM_SAMPLE, TLDR_SAMPLE } from "@/lib/code-samples";
 
-// Read at build time, so "Show the code" always shows the code that actually runs.
+// Prerendered, so the samples are highlighted once at build time and no highlighter ships to the browser.
 export const dynamic = "force-static";
 
-function source(path: string): string {
-  // The page is prerendered, so these files are only read at build time and need no tracing.
-  return readFileSync(join(/*turbopackIgnore: true*/ process.cwd(), path), "utf8").trim();
+function highlight(code: string): Promise<string> {
+  return codeToHtml(code, { lang: "ts", theme: "one-dark-pro" });
 }
 
 const STACK = ["Next.js 16", "AI SDK", "OpenAI", "Zod", "TypeScript"];
@@ -19,12 +18,15 @@ const CHIP_COLORS = [
   "var(--pastel-green)",
 ];
 
-export default function Home() {
+export default async function Home() {
+  const [tldr, stream, insights, chat] = await Promise.all(
+    [TLDR_SAMPLE, STREAM_SAMPLE, INSIGHTS_SAMPLE, CHAT_SAMPLE].map(highlight),
+  );
   const snippets: Snippets = {
-    tldr: source("src/app/actions.ts"),
-    stream: source("src/app/api/summarize/route.ts"),
-    insights: `${source("src/lib/ai/schemas.ts")}\n\n// ───── src/app/api/extract/route.ts ─────\n\n${source("src/app/api/extract/route.ts")}`,
-    chat: source("src/app/api/chat/route.ts"),
+    tldr: tldr ?? "",
+    stream: stream ?? "",
+    insights: insights ?? "",
+    chat: chat ?? "",
   };
 
   return (

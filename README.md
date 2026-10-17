@@ -4,8 +4,10 @@
 The demo app for my DevFest Mbarara talk.
 
 Paste a long document (or load the sample meeting transcript), then go through four steps. Each
-step shows one AI SDK building block, and each panel has a **Show the code** toggle that displays
-the exact server code behind it.
+step shows one AI SDK building block, and each panel has a **Show sample code** toggle with a
+trimmed, syntax-highlighted version of the code behind it: just the SDK call, without the app's
+input checks and error handling. The samples live in
+[`src/lib/code-samples.ts`](src/lib/code-samples.ts); the table below links the full versions.
 
 | Step | What you see | AI SDK concept | File |
 |---|---|---|---|

@@ -1,41 +1,50 @@
 @import "tailwindcss";
 
-:root {
-  color-scheme: light;
-  --bg: #f6f7f4;
-  --panel: #ffffff;
-  --ink: #12211c;
-  --muted: #5b6a65;
-  --line: #e2e6e1;
-  --chip: #eef1ec;
-  --accent: #1a73e8;
-  --danger: #c5221f;
-  --code-bg: #0f1a17;
-  --code-ink: #d7e3dd;
-  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  background: var(--bg);
-  color: var(--ink);
+@theme inline {
+  --font-sans: var(--font-google-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-roboto-mono), ui-monospace, monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    color-scheme: dark;
-    --bg: #0d1412;
-    --panel: #141d1a;
-    --ink: #e8efec;
-    --muted: #9aa9a3;
-    --line: #26332f;
-    --chip: #1d2925;
-    --accent: #5b9cf5;
-    --danger: #f28b82;
-    --code-bg: #0a0f0d;
-  }
+/* GDG brand palette. White theme only: the event slides are light, so the demo matches them. */
+:root {
+  color-scheme: light;
+
+  --google-blue: #4285f4;
+  --google-green: #34a853;
+  --google-yellow: #fbbc04;
+  --google-red: #ea4335;
+  --pastel-blue: #c3ecf6;
+  --pastel-green: #ccf6c5;
+  --pastel-yellow: #ffe7a5;
+  --pastel-red: #f8d8d8;
+  --off-white: #f0f0f0;
+  --black-02: #1e1e1e;
+
+  --bg: #ffffff;
+  --panel: #ffffff;
+  --ink: var(--black-02);
+  --muted: #5f6368;
+  --line: #e3e3e3;
+  --chip: #f6f6f6;
+  --accent: var(--google-blue);
+  --danger: #c5221f;
+  --code-bg: var(--black-02);
+  --code-ink: #f0f0f0;
+
+  background: var(--bg);
+  color: var(--ink);
 }
 
 body {
   min-height: 100vh;
   margin: 0;
   background: var(--bg);
+  font-family: var(--font-sans);
+}
+
+.subhead {
+  font-family: var(--font-mono);
+  font-weight: 300;
 }
 
 .markdown {
@@ -47,7 +56,7 @@ body {
 .markdown h3 {
   margin: 1rem 0 0.4rem;
   font-size: 0.95rem;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .markdown > :first-child {
@@ -74,10 +83,10 @@ body {
 }
 
 .markdown strong {
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .markdown code {
-  font-family: ui-monospace, monospace;
+  font-family: var(--font-mono);
   font-size: 0.85em;
 }

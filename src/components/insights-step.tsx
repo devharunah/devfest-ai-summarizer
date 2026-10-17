@@ -8,10 +8,10 @@ import { insightsSchema } from "@/lib/ai/schemas";
 import { Button, ErrorNote, Panel, Spinner } from "./panel";
 
 const SENTIMENT_STYLES: Record<string, string> = {
-  positive: "bg-emerald-500/15 text-emerald-700 dark:text-emerald-300",
-  neutral: "bg-slate-500/15 text-slate-700 dark:text-slate-300",
-  mixed: "bg-amber-500/15 text-amber-700 dark:text-amber-300",
-  negative: "bg-rose-500/15 text-rose-700 dark:text-rose-300",
+  positive: "bg-[var(--pastel-green)]",
+  neutral: "bg-[var(--off-white)]",
+  mixed: "bg-[var(--pastel-yellow)]",
+  negative: "bg-[var(--pastel-red)]",
 };
 
 export function InsightsStep({ document, code }: { document: string; code: string }) {
@@ -56,7 +56,7 @@ export function InsightsStep({ document, code }: { document: string; code: strin
       {object && !showJson ? (
         <div className="space-y-4">
           <div>
-            {object.title ? <h3 className="text-base font-semibold">{object.title}</h3> : null}
+            {object.title ? <h3 className="text-base font-bold">{object.title}</h3> : null}
             {object.oneLiner ? (
               <p className="mt-1 text-sm leading-6 text-[var(--muted)]">{object.oneLiner}</p>
             ) : null}
@@ -72,7 +72,7 @@ export function InsightsStep({ document, code }: { document: string; code: strin
                 topic ? (
                   <span
                     key={`${i}-${topic}`}
-                    className="rounded-full bg-[var(--chip)] px-2 py-0.5 text-xs"
+                    className="subhead rounded-full bg-[var(--pastel-blue)] px-2 py-0.5 text-xs"
                   >
                     #{topic}
                   </span>
@@ -88,7 +88,7 @@ export function InsightsStep({ document, code }: { document: string; code: strin
 
           {object.actionItems?.length ? (
             <div className="rounded-xl border border-[var(--line)] p-4">
-              <h4 className="text-sm font-semibold">Action items</h4>
+              <h4 className="text-sm font-bold">Action items</h4>
               <ul className="mt-2 divide-y divide-[var(--line)]">
                 {object.actionItems.map((item, i) =>
                   item ? (
@@ -96,7 +96,7 @@ export function InsightsStep({ document, code }: { document: string; code: strin
                     <li key={i} className="flex items-start justify-between gap-3 py-2 text-sm">
                       <span className="leading-6">{item.task}</span>
                       {item.owner ? (
-                        <span className="shrink-0 rounded-md bg-[var(--chip)] px-2 py-0.5 text-xs font-medium">
+                        <span className="shrink-0 rounded-full bg-[var(--pastel-blue)] px-2.5 py-0.5 text-xs font-medium">
                           {item.owner}
                         </span>
                       ) : null}
@@ -115,7 +115,7 @@ export function InsightsStep({ document, code }: { document: string; code: strin
 function Card({ title, items }: { title: string; items: (string | undefined)[] | undefined }) {
   return (
     <div className="rounded-xl border border-[var(--line)] p-4">
-      <h4 className="text-sm font-semibold">{title}</h4>
+      <h4 className="text-sm font-bold">{title}</h4>
       {items?.length ? (
         <ul className="mt-2 list-disc space-y-1.5 pl-5 text-sm leading-6">
           {items.map((item, i) =>

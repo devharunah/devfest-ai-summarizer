@@ -30,10 +30,10 @@ export function Summarizer({ snippets }: { snippets: Snippets }) {
     <div className="grid gap-6 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
       <section
         aria-labelledby="document-heading"
-        className="rounded-2xl border border-[var(--line)] bg-[var(--panel)] p-5 shadow-sm sm:p-6 lg:sticky lg:top-6 lg:self-start"
+        className="rounded-2xl border border-[var(--line)] bg-[var(--panel)] p-5 shadow-[0_1px_3px_rgba(0,0,0,0.06)] sm:p-6 lg:sticky lg:top-6 lg:self-start"
       >
         <div className="flex items-center justify-between gap-3">
-          <h2 id="document-heading" className="text-lg font-semibold tracking-tight">
+          <h2 id="document-heading" className="text-xl font-bold tracking-tight">
             Your document
           </h2>
           <div className="flex gap-2">
@@ -55,10 +55,10 @@ export function Summarizer({ snippets }: { snippets: Snippets }) {
           value={document}
           onChange={(e) => setDocument(e.currentTarget.value)}
           placeholder="Paste meeting notes, a transcript, an article, a contract…"
-          className="mt-4 h-[50vh] w-full resize-y rounded-xl border border-[var(--line)] bg-[var(--bg)] p-4 font-mono text-[13px] leading-6 outline-none focus:border-[var(--accent)] lg:h-[60vh]"
+          className="mt-4 h-[50vh] w-full resize-y rounded-xl border border-[var(--line)] bg-[var(--off-white)]/50 p-4 text-[14px] leading-6 outline-none focus:border-[var(--accent)] focus:bg-white lg:h-[60vh]"
         />
         <p
-          className={`mt-2 text-xs ${tooLong ? "text-[var(--danger)]" : "text-[var(--muted)]"}`}
+          className={`subhead mt-2 text-xs ${tooLong ? "text-[var(--danger)]" : "text-[var(--muted)]"}`}
           data-testid="word-count"
         >
           {words.toLocaleString()} words · {document.length.toLocaleString()} /{" "}

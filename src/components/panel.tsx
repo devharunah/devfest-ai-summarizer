@@ -66,11 +66,18 @@ export function Panel({
 
       <details className="group mt-4 border-t border-[var(--line)] pt-3">
         <summary className="subhead cursor-pointer select-none text-sm text-[var(--muted)] hover:text-[var(--ink)]">
-          Show the code <span className="text-xs">({codePath})</span>
+          Show sample code
         </summary>
-        <pre className="mt-3 max-h-[28rem] overflow-auto rounded-xl bg-[var(--code-bg)] p-4 font-mono text-[12.5px] leading-5 text-[var(--code-ink)]">
-          <code>{code}</code>
-        </pre>
+        <div
+          className="code-sample mt-3"
+          // Highlighted at build time from our own samples in src/lib/code-samples.ts, never user input.
+          // biome-ignore lint/security/noDangerouslySetInnerHtml: trusted, build-time Shiki output
+          dangerouslySetInnerHTML={{ __html: code }}
+        />
+        <p className="subhead mt-2 text-xs text-[var(--muted)]">
+          Trimmed for the slide. The full version, with input checks and error handling, is in{" "}
+          <code>{codePath}</code>
+        </p>
       </details>
     </section>
   );

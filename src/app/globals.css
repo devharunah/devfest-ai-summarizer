@@ -47,6 +47,18 @@ body {
   font-weight: 300;
 }
 
+/* Shiki's <pre> carries the theme colors inline; this only sizes and frames it. */
+.code-sample pre {
+  max-height: 28rem;
+  overflow: auto;
+  margin: 0;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  line-height: 1.25rem;
+}
+
 .markdown {
   line-height: 1.7;
 }
